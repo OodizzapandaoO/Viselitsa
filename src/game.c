@@ -46,3 +46,18 @@ void window_free(x_window_param_t *param) { //освобождение памя�
   XFreeGC(param->display, param->gc); //освобождаем графический контекст
   XCloseDisplay(param->display); //закрываем сервер display
 }
+
+int str_vec_init(string_vec_t *vec, unsigned capacity) { //подготовка структуры
+  vec->content = malloc(capacity * sizeof(char **)); //выделяем память
+
+  if (!vec->content) { //обработка ошибок
+    perror("Vector init allocation failed");
+    return 1;
+  }
+
+  vec->capacity = capacity; //переменной capacity присваиваем значение размера
+                            //выделеной памяти
+  vec->size = 0; //изначальный размер равен нулю
+
+  return 0;
+}
