@@ -61,3 +61,39 @@ int str_vec_init(string_vec_t *vec, unsigned capacity) { //подготовка 
 
   return 0;
 }
+
+int str_vec_push(string_vec_t *vec, char *value) { //добавляем слово
+  if (value[0] == '\0')
+    return 0;
+
+  if (vec->size >= vec->capacity) { //проверяем не заполнен ли контейнер
+
+    unsigned new_capacity = vec->capacity * 2; //если заполнен удваеваем место
+    char **new_content = realloc(
+        vec->content,
+        new_capacity * sizeof(char **)); //перевыделяет новое пространство и
+                                         //копирует туда старые элементы
+
+    if (!new_content) { //проверяем не заполнен ли новый контейнер
+      perror("Vector push reallocation failed"); //если есть ошибка
+      return 1;
+    }
+
+    vec->capacity = new_capacity; //если нет ошибки
+    vec->content = new_content;
+  }
+
+  int value_len = strlen(value) + 1; //определяем размер слова
+  vec->content[vec->size] =
+      malloc(value_len * sizeof(char)); //выделяем память для слова
+  if (!vec->content[vec->size]) { //проверяем получилось ли добавить слово
+    perror("Vector push allocation failed"); //если не получилось
+    return 1;
+  }
+
+  strncpy(vec->content[vec->size], value,
+          value_len); //копируем слово по данному указателю
+  ++vec->size; //увеличиваем размер size
+
+  return 0;
+}
