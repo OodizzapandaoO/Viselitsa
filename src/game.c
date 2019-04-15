@@ -108,3 +108,10 @@ void str_vec_free(string_vec_t *vec) { //освобождение
   }
   free(vec->content); //освобождаем саму таблицу
 }
+
+char *str_vec_random(string_vec_t *vec) { //выбирает рандомное слово
+  srand(time(NULL)); //задает зерно для вычисления рандомного числа
+  int random_variable = rand(); //возвращает случайное число
+  return vec->content[random_variable % vec->size]; //возвращает элемент таблицы
+                                                    //в которой находится слово
+}
