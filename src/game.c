@@ -97,3 +97,14 @@ int str_vec_push(string_vec_t *vec, char *value) { //добавляем слов
 
   return 0;
 }
+
+void str_vec_free(string_vec_t *vec) { //освобождение
+  if (vec->content == NULL) //проверяет нужно ли вообще очищать content
+    return;
+
+  for (int n = 0; n < vec->size;
+       ++n) { //если нужно, то проходим по каждому элементу и очищаем
+    free(vec->content[n]);
+  }
+  free(vec->content); //освобождаем саму таблицу
+}
