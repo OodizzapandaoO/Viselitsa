@@ -115,3 +115,21 @@ char *str_vec_random(string_vec_t *vec) { //выбирает рандомное 
   return vec->content[random_variable % vec->size]; //возвращает элемент таблицы
                                                     //в которой находится слово
 }
+
+static char *merge_str(char *first,
+                       char *second) { //объединяет два слова в одну строку и
+                                       //возвращает указатель на нее
+  int size = strlen(
+      first); //высчитываем необходимый для выделения размер памяти(создаем
+              //переменную и присваиваем ей значение первого аргумента функции
+  size += strlen(second); //прибавляем к этому аргументу значение второй строки
+  ++size;                 //увеличиваем на единицу
+
+  char *result = malloc(
+      size * sizeof(char)); //создаем переменную и выделяем под нее память
+  strncpy(result, first, strlen(first)); //копируем в эту память слово
+  strncpy(result + strlen(first), second,
+          strlen(second)); //копируем второе слово оставив место под первое
+  result[size] = '\0';     //присваиваем конец строки
+  return result;           //возвращаем указатель
+}
