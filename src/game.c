@@ -133,3 +133,41 @@ static char *merge_str(char *first,
   result[size] = '\0';     //присваиваем конец строки
   return result;           //возвращаем указатель
 }
+
+int str_vec_load_from_file(string_vec_t *vec, char *filedir,
+                           char *filename) { //загружаем слова из файла
+  str_vec_free(vec);     //освобождает память
+  str_vec_init(vec, 10); //подготовка вектора к работе
+
+  char *fullpath =
+      merge_str(filedir, filename); //объединяем две переменные в одну строку и
+                                    //передаем указатель на новую строку
+
+  FILE *words_file = fopen(
+      fullpath,
+      "r"); //создаем указатель на файл со словами, открываем файл для чтения
+  if (!words_file) { //обработка ошибок
+    perror("Open words file failed");
+    return 1;
+  }
+
+  free(fullpath); //если удалось открыть файл удаляем уже ненужную переменную
+
+  char current_word[100]; //массив в котором хранится слово
+  int err = 0; //создаем переменную в которой хранится значение ошибки
+
+  while (!feof(words_file)) { //цикл, который будет работать до тех пор пока
+                              //файл не закончился
+    fscanf(words_file, "%s", current_word); //принимает значение из файла
+
+    err = str_vec_push(vec, current_word); //добавляем это слово в наш вектор
+    if (err != 0) { //обработка ошибок
+      fprintf(stderr, "Vector push failed.\n");
+      return 1;
+    }
+
+    current_word[0] = '\0';
+  }
+
+  return 0;
+}
