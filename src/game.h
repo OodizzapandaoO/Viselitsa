@@ -20,7 +20,7 @@ typedef struct {     //контейнер для значений
   char **content;    //указатель на указатель
   unsigned capacity; //общий размер выделеной памяти
   unsigned size; //сколько объектов в нем сейчас находится
-} string_vec_t; //"контейнер
+} string_vec_t; //контейнер
 
 int str_vec_init(string_vec_t *vec,
                  unsigned capacity); //подготовка структуры к работе, выделение
@@ -30,3 +30,10 @@ void str_vec_free(string_vec_t *vec); //освобождает вектор
 char *str_vec_random(string_vec_t *vec); //выбирает рандомное слово
 int str_vec_load_from_file(string_vec_t *vec, char *filedir,
                            char *filename); //выгружаем слова из файла
+
+
+typedef struct {
+    Pixmap bitmap; //картинка
+    unsigned int bitmap_width, bitmap_height; //параметры картинки
+    int x, y;
+} pixmap_attr_t;
