@@ -171,3 +171,12 @@ int str_vec_load_from_file(string_vec_t *vec, char *filedir,
 
   return 0;
 }
+
+int load_pixmap(x_window_param_t *window, pixmap_attr_t *pixmap, //структура, хранящая картинку
+char *filedir, char *filename) {
+    char *fullpath = merge_str(filedir, filename); //объединяет дерикторию и имя файла в одну строку
+    int rc = XReadBitmapFile(window->display, window->window, //возвращает результат, прочитана ли картинка
+    fullpath,                                      //путь
+    &pixmap->bitmap_width, &pixmap->bitmap_height, //параметры
+    &pixmap->bitmap, //место куда загрузится картинка
+    &pixmap->x, &pixmap->y); //координаты
