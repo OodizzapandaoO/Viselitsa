@@ -31,9 +31,11 @@ char *str_vec_random(string_vec_t *vec); //выбирает рандомное �
 int str_vec_load_from_file(string_vec_t *vec, char *filedir,
                            char *filename); //выгружаем слова из файла
 
-
 typedef struct {
     Pixmap bitmap; //картинка
     unsigned int bitmap_width, bitmap_height; //параметры картинки
     int x, y;
 } pixmap_attr_t;
+
+int load_pixmap(x_window_param_t *window, pixmap_attr_t *pixmap, //загрузка картинки из файла
+char *filedir, char *filename);
