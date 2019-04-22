@@ -180,3 +180,10 @@ char *filedir, char *filename) {
     &pixmap->bitmap_width, &pixmap->bitmap_height, //параметры
     &pixmap->bitmap, //место куда загрузится картинка
     &pixmap->x, &pixmap->y); //координаты
+    if (rc != BitmapSuccess) { //обработка ошибок
+	fprintf(stderr, "Read bitmap failed: %s\n", fullpath);
+	return 1;
+    }
+    free(fullpath); //освобождение памяти
+    return 0;
+}
