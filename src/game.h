@@ -30,3 +30,25 @@ void str_vec_free(string_vec_t *vec); //освобождает вектор
 char *str_vec_random(string_vec_t *vec); //выбирает рандомное слово
 int str_vec_load_from_file(string_vec_t *vec, char *filedir,
                            char *filename); //выгружаем слова из файла
+typedef enum { //вспомогательные константы
+  LANG_RUS,
+  LANG_ENG
+} game_lang_t;
+
+game_lang_t lang_select();
+
+typedef struct {
+  game_lang_t language; //язык
+  string_vec_t words;
+  pixmap_attr_t step_to_death[7]; // 7 картинок
+} game_res_t;                     //ресурсы для игры
+
+int game_res_init(x_window_param_t *window, game_res_t *res, char *path,
+                  game_lang_t lang); //загрузка ресурсов
+void game_res_free(x_window_param_t *window,
+                   game_res_t *res); //освобождение ресурсов
+
+typedef enum { //вспомогательные константы
+  GAME_PROGRESS,
+  GAME_OVER
+} game_status_t;
