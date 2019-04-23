@@ -171,3 +171,19 @@ int str_vec_load_from_file(string_vec_t *vec, char *filedir,
 
   return 0;
 }
+
+game_lang_t lang_select() {
+  printf("Language selection:\n  1)ENG\n  2)RUS\n  Selection:");
+  int itog;
+  game_lang_t result = LANG_ENG;
+  scanf("%i", &itog);
+  switch (itog) {
+  case 1:
+    result = LANG_ENG;
+    break;
+  case 2:
+    result = LANG_RUS;
+    break;
+  }
+  return result;
+}
