@@ -187,3 +187,49 @@ game_lang_t lang_select() {
   }
   return result;
 }
+
+int game_res_init(x_window_param_t *window, game_res_t *res, char *path,
+                  game_lang_t lang) { //загрузка ресурсов
+  memset(&res->words, 0, sizeof(string_vec_t)); //зануляем память в базе слов
+  res->language = lang;
+  int err = 0;
+  if (res->language == LANG_RUS) {
+    err = str_vec_load_from_file(&res->words, path, "words.txt");
+  } else {
+    err = str_vec_load_from_file(&res->words, path, "words_eng.txt");
+  }
+
+  if (err != 0)           //обработка ошибок
+    goto error_handler_1; //если не получилось загрузить слова то перекидывает
+                          //на  error_handler_1
+
+  int count = 0; //счетчик для загрузки картинок
+
+  for (; count < 7; count++) {
+
+    char image_name[11]; //массив для названия файла картинки
+    sprintf(image_name, "pos_%i.xbm",
+            count); //задаем правильное название файла используя счетчик
+
+    err = load_pixmap(window, &res->step_to_death[count], path,
+                      image_name); //если не получилось загрузить картинку то
+                                   //перекидывает на error_handler_2
+    if (err != 0)
+      goto error_handler_2;
+  }
+
+  return 0;
+
+error_handler_2:
+  do { //очищает файлы в обратном порядке относительно счетчика
+    count--;
+    XFreePixmap(window->display, res->step_to_death[count].bitmap);
+  } while (count > 0);
+
+  str_vec_free(&res->words); //очищает вектор
+
+error_handler_1:
+  fprintf(stderr,
+          "Game resources loading failed.\n"); //выводит сообщение об ошибке
+  return 1;
+}
