@@ -241,3 +241,15 @@ void game_res_free(x_window_param_t *window,
   for (int i = 0; i < 6; i++)
     XFreePixmap(window->display, res->step_to_death[i].bitmap);
 }
+
+int game_init(game_stat_t *game,
+              game_res_t *game_res) { //подготовка структуры к работе
+
+  game->words_base = &game_res->words; //присваиваем значение для базы слов
+  game->word_progress = NULL; //прогресс слова
+  if (game_reset(game)) {     //сброс текущего прогреса
+    fprintf(stderr, "Game reset failed.\n");
+    return 1;
+  }
+  return 0;
+}

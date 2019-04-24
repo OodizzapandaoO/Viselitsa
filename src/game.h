@@ -52,3 +52,11 @@ typedef enum { //вспомогательные константы
   GAME_PROGRESS,
   GAME_OVER
 } game_status_t;
+
+typedef struct {
+  string_vec_t *words_base; //указатель на базу слов
+  char *current_word;       //текущее слово
+  char *word_progress;      //прогресс слова
+  int step_to_death;    //на сколько близки с проигрышу
+  game_status_t status; //статус игры
+} game_stat_t;          //состояние игры
