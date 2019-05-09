@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <X11/Xlib.h>
+
 typedef struct {    //отрисовка окна
   Display *display; //сервер
   Window window;    //окно
@@ -30,6 +32,17 @@ void str_vec_free(string_vec_t *vec); //освобождает вектор
 char *str_vec_random(string_vec_t *vec); //выбирает рандомное слово
 int str_vec_load_from_file(string_vec_t *vec, char *filedir,
                            char *filename); //выгружаем слова из файла
+
+typedef struct {
+  Pixmap bitmap;                            //картинка
+  unsigned int bitmap_width, bitmap_height; //параметры картинки
+  int x, y;
+} pixmap_attr_t;
+
+int load_pixmap(x_window_param_t *window,
+                pixmap_attr_t *pixmap, //загружает из файла картинку
+                char *filedir, char *filename);
+
 typedef enum { //вспомогательные константы
   LANG_RUS,
   LANG_ENG
@@ -52,11 +65,3 @@ typedef enum { //вспомогательные константы
   GAME_PROGRESS,
   GAME_OVER
 } game_status_t;
-
-typedef struct {
-  string_vec_t *words_base; //указатель на базу слов
-  char *current_word;       //текущее слово
-  char *word_progress;      //прогресс слова
-  int step_to_death;    //на сколько близки с проигрышу
-  game_status_t status; //статус игры
-} game_stat_t;          //состояние игры

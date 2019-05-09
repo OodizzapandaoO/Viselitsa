@@ -172,6 +172,26 @@ int str_vec_load_from_file(string_vec_t *vec, char *filedir,
   return 0;
 }
 
+int load_pixmap(x_window_param_t *window,
+                pixmap_attr_t *pixmap, //структура, хранящая картинку
+                char *filedir, char *filename) {
+  char *fullpath = merge_str(
+      filedir, filename); //объединяет дерикторию и имя файла в одну строку
+  int rc = XReadBitmapFile(
+      window->display,
+      window->window, //возвращает результат, прочитана ли картинка
+      fullpath,       //путь
+      &pixmap->bitmap_width, &pixmap->bitmap_height, //параметры
+      &pixmap->bitmap, //место куда загрузится картинка
+      &pixmap->x, &pixmap->y); //координаты
+  if (rc != BitmapSuccess) {   //обработка ошибок
+    fprintf(stderr, "Read bitmap failed: %s\n", fullpath);
+    return 1;
+  }
+  free(fullpath); //освобождение памяти
+  return 0;
+}
+
 game_lang_t lang_select() {
   printf("Language selection:\n  1)ENG\n  2)RUS\n  Selection:");
   int itog;
