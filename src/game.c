@@ -273,3 +273,131 @@ int game_init(game_stat_t *game,
   }
   return 0;
 }
+
+void game_letter_push(game_stat_t *game,
+                      char *letter) { //принимаем букву из русского яз
+  int hitting = 0;                    //количество попаданий
+
+  for (int i = 0; i < strlen(game->current_word);
+       ++i) { //проходим по всему слову и проверяем подходит ли буква, которую
+              //мы написали
+    if ((letter[0] == game->current_word[i]) && //проверяем по 2 чара из-за
+                                                //особенностей символов русского
+                                                //алфавита (занимают 2 чара)
+        (letter[1] == game->current_word[i + 1])) {
+      game->word_progress[i] = game->current_word[i];
+      game->word_progress[i + 1] = game->current_word[i + 1];
+      i++;
+      hitting++;
+    }
+  }
+
+  if (hitting == 0) //если у нас 0 попаданий
+    game->step_to_death++; //счетчик "шагов к проигрышу" увеличивается
+
+  if (game->step_to_death ==
+      6) //если счетчик "шагов к проигрышу" достиг 6 - проигрыш
+    game->status = GAME_OVER;
+}
+
+void game_letter_push_eng(game_stat_t *game,
+                          char letter) { //тот же цикл для английской раскладки
+  int hitting = 0;
+
+  for (int i = 0; i < strlen(game->current_word); ++i) {
+    if (letter == game->current_word[i]) {
+      game->word_progress[i] = game->current_word[i];
+      hitting++;
+    }
+  }
+
+  if (hitting == 0)
+    game->step_to_death++;
+
+  if (game->step_to_death == 6)
+    game->status = GAME_OVER;
+}
+
+static void game_word_progress_free(
+    game_stat_t
+        *game) { //освобождает память, которая выделена для word_progress
+  if (game->word_progress != NULL)
+    free(game->word_progress);
+}
+
+int game_reset(game_stat_t *game) { //сбрасывает текущий прогресс
+  game->current_word =
+      str_vec_random(game->words_base); //берем новое рандомное слово
+
+  game_word_progress_free(game); //удаляет старое слово
+  int word_len = strlen(game->current_word) + 1; //узнаем длину нового слова
+
+  game->word_progress =
+      malloc(word_len * sizeof(char)); //выделяем память под новое слово
+  if (!game->word_progress) { //оброботка ошибок
+    perror("Word_progress allocation failed");
+    return 1;
+  }
+
+  memset(game->word_progress, '_',
+         word_len * sizeof(char)); //если ошибки нет записываем везде _
+  game->word_progress[word_len - 1] =
+      '\0'; //последниму значению присваиваем значение конца строки
+
+  game->step_to_death =
+      0; //счетчик "шагов до проигрыша" в начале игры равен нулю
+  game->status = GAME_PROGRESS;
+
+  return 0;
+}
+
+void game_free(game_stat_t *game) { //освобождение памяти структуры логики игры
+  game_word_progress_free(
+      game); //освобождаем память, которая выделилась для game_word_progress
+}
+
+char *
+game_return_progress(game_stat_t *game) { //возвращает слово (для русского яз)
+  int size = strlen(game->current_word) + 1; //узнаем размер слова
+
+  static char *result; //создаем указатель на новую строку
+
+  if (result != NULL) //проверяем равен ли он null
+    free(result);     //если не равен - то удаляем
+
+  result = malloc(size * sizeof(char)); //выделяем новую память
+
+  memset(result, 0, size * sizeof(char)); //зануляем
+
+  for (int i = 0, j = 0; j < size; i++,
+           j++) { //в цикле мы используем 2 переменные счетчика для
+                  //отслеживания позиции в текущемм слове и слове, которое мы
+                  //получим в результате. Это необходимо из-за того, что в
+                  // Linux русская раскладка требует 2 байта и кол-во
+                  //подчеркиваний в текущем слове удвоено. При нахождении
+                  //подчеркиваний счетчик позиции текущего слова перепрыгивает
+                  //через 1 байт
+    result[i] = game->word_progress[j];
+    if (game->word_progress[j] == '_')
+      j++;
+  }
+
+  return result;
+}
+
+char *
+game_return_progress_eng(game_stat_t *game) { //возвращаем слово (для англ яз)
+  return game->word_progress;
+}
+
+int game_win_check(
+    game_stat_t *game) { //проверяем совпадает ли исходное слово с прогрессом
+  return !strcmp(game->current_word, game->word_progress)
+             ? 1
+             : 0; //если совпадает 1, если нет 0
+}
+
+int game_lose_check(
+    game_stat_t *game) { //проверяем равно ли количество "шагов до проигрыша" 6
+  return game->step_to_death == 6 ? 1 : 0; //если совпадает 1, если нет 0
+}

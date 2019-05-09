@@ -65,3 +65,39 @@ typedef enum { //вспомогательные константы
   GAME_PROGRESS,
   GAME_OVER
 } game_status_t;
+
+typedef struct {
+  string_vec_t *words_base; //указатель на базу слов
+  char *current_word;       //текущее слово
+  char *word_progress;      //прогресс слова
+  int step_to_death;    //на сколько близки с проигрышу
+  game_status_t status; //статус игры
+
+} game_stat_t; //состояние игры
+
+int game_init(game_stat_t *game, game_res_t *game_res); //подготовка к игре
+void game_letter_push(game_stat_t *game,
+                      char *letter); //принимает букву русский яз
+void game_letter_push_eng(game_stat_t *game,
+                          char letter); //принимает букву англ яз
+int game_reset(game_stat_t *game); //сбросить текущий прогресс
+void game_free(game_stat_t *game); //освободить ресурсы
+char *
+game_return_progress(game_stat_t *game); //возвращает текущее слово русский яз
+char *
+game_return_progress_eng(game_stat_t *game); //возвращает текущее слово англ яз
+int game_win_check(game_stat_t *game);  //проверяет победу
+int game_lose_check(game_stat_t *game); //проверяет проигрыш
+
+int return_letter_by_keycode(
+    unsigned int keycode,
+    char *output); //принимает код клавиши и возвращает букву
+int return_letter_by_keycode_eng(unsigned int keycode, char *output);
+
+void game_draw(x_window_param_t *win, game_res_t *res,
+               game_stat_t *game); //отрисовка прогресса
+int pre_game_settings(x_window_param_t *win); //пердигровые настройки
+void game_loop(x_window_param_t *win, game_res_t *res,
+               game_stat_t *game); //игровой цикл
+
+#endif
