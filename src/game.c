@@ -396,6 +396,140 @@ int game_win_check(
              ? 1
              : 0; //если совпадает 1, если нет 0
 }
+int return_letter_by_keycode(unsigned int keycode, char *output) {
+
+  if (keycode == 0x18) {
+    strncpy(output, "й", 2 * sizeof(char));
+  } else if (keycode == 0x19) {
+    strncpy(output, "ц", 2 * sizeof(char));
+  } else if (keycode == 0x1a) {
+    strncpy(output, "у", 2 * sizeof(char));
+  } else if (keycode == 0x1b) {
+    strncpy(output, "к", 2 * sizeof(char));
+  } else if (keycode == 0x1c) {
+    strncpy(output, "е", 2 * sizeof(char));
+  } else if (keycode == 0x1d) {
+    strncpy(output, "н", 2 * sizeof(char));
+  } else if (keycode == 0x1e) {
+    strncpy(output, "г", 2 * sizeof(char));
+  } else if (keycode == 0x1f) {
+    strncpy(output, "ш", 2 * sizeof(char));
+  } else if (keycode == 0x20) {
+    strncpy(output, "щ", 2 * sizeof(char));
+  } else if (keycode == 0x21) {
+    strncpy(output, "з", 2 * sizeof(char));
+  } else if (keycode == 0x22) {
+    strncpy(output, "х", 2 * sizeof(char));
+  } else if (keycode == 0x23) {
+    strncpy(output, "ъ", 2 * sizeof(char));
+
+  } else if (keycode == 0x26) {
+    strncpy(output, "ф", 2 * sizeof(char));
+  } else if (keycode == 0x27) {
+    strncpy(output, "ы", 2 * sizeof(char));
+  } else if (keycode == 0x28) {
+    strncpy(output, "в", 2 * sizeof(char));
+  } else if (keycode == 0x29) {
+    strncpy(output, "а", 2 * sizeof(char));
+  } else if (keycode == 0x2a) {
+    strncpy(output, "п", 2 * sizeof(char));
+  } else if (keycode == 0x2b) {
+    strncpy(output, "р", 2 * sizeof(char));
+  } else if (keycode == 0x2c) {
+    strncpy(output, "о", 2 * sizeof(char));
+  } else if (keycode == 0x2d) {
+    strncpy(output, "л", 2 * sizeof(char));
+  } else if (keycode == 0x2e) {
+    strncpy(output, "д", 2 * sizeof(char));
+  } else if (keycode == 0x2f) {
+    strncpy(output, "ж", 2 * sizeof(char));
+  } else if (keycode == 0x30) {
+    strncpy(output, "э", 2 * sizeof(char));
+
+  } else if (keycode == 0x34) {
+    strncpy(output, "я", 2 * sizeof(char));
+  } else if (keycode == 0x35) {
+    strncpy(output, "ч", 2 * sizeof(char));
+  } else if (keycode == 0x36) {
+    strncpy(output, "с", 2 * sizeof(char));
+  } else if (keycode == 0x37) {
+    strncpy(output, "м", 2 * sizeof(char));
+  } else if (keycode == 0x38) {
+    strncpy(output, "и", 2 * sizeof(char));
+  } else if (keycode == 0x39) {
+    strncpy(output, "т", 2 * sizeof(char));
+  } else if (keycode == 0x3a) {
+    strncpy(output, "ь", 2 * sizeof(char));
+  } else if (keycode == 0x3b) {
+    strncpy(output, "б", 2 * sizeof(char));
+  } else if (keycode == 0x3c) {
+    strncpy(output, "ю", 2 * sizeof(char));
+  } else
+    return 1;
+  return 0;
+}
+
+int return_letter_by_keycode_eng(unsigned int keycode, char *output) {
+
+  if (keycode == 0x18) {
+    strncpy(output, "q", sizeof(char));
+  } else if (keycode == 0x19) {
+    strncpy(output, "w", sizeof(char));
+  } else if (keycode == 0x1a) {
+    strncpy(output, "e", sizeof(char));
+  } else if (keycode == 0x1b) {
+    strncpy(output, "r", sizeof(char));
+  } else if (keycode == 0x1c) {
+    strncpy(output, "t", sizeof(char));
+  } else if (keycode == 0x1d) {
+    strncpy(output, "y", sizeof(char));
+  } else if (keycode == 0x1e) {
+    strncpy(output, "u", sizeof(char));
+  } else if (keycode == 0x1f) {
+    strncpy(output, "i", sizeof(char));
+  } else if (keycode == 0x20) {
+    strncpy(output, "o", sizeof(char));
+  } else if (keycode == 0x21) {
+    strncpy(output, "p", sizeof(char));
+
+  } else if (keycode == 0x26) {
+    strncpy(output, "a", sizeof(char));
+  } else if (keycode == 0x27) {
+    strncpy(output, "s", sizeof(char));
+  } else if (keycode == 0x28) {
+    strncpy(output, "d", sizeof(char));
+  } else if (keycode == 0x29) {
+    strncpy(output, "f", sizeof(char));
+  } else if (keycode == 0x2a) {
+    strncpy(output, "g", sizeof(char));
+  } else if (keycode == 0x2b) {
+    strncpy(output, "h", sizeof(char));
+  } else if (keycode == 0x2c) {
+    strncpy(output, "j", sizeof(char));
+  } else if (keycode == 0x2d) {
+    strncpy(output, "k", sizeof(char));
+  } else if (keycode == 0x2e) {
+    strncpy(output, "l", sizeof(char));
+
+  } else if (keycode == 0x34) {
+    strncpy(output, "z", sizeof(char));
+  } else if (keycode == 0x35) {
+    strncpy(output, "x", sizeof(char));
+  } else if (keycode == 0x36) {
+    strncpy(output, "c", sizeof(char));
+  } else if (keycode == 0x37) {
+    strncpy(output, "v", sizeof(char));
+  } else if (keycode == 0x38) {
+    strncpy(output, "b", sizeof(char));
+  } else if (keycode == 0x39) {
+    strncpy(output, "n", sizeof(char));
+  } else if (keycode == 0x3a) {
+    strncpy(output, "m", sizeof(char));
+  } else
+    return 1;
+  return 0;
+}
+
 
 int game_lose_check(
     game_stat_t *game) { //проверяем равно ли количество "шагов до проигрыша" 6
