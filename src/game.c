@@ -396,6 +396,12 @@ int game_win_check(
              ? 1
              : 0; //если совпадает 1, если нет 0
 }
+
+int game_lose_check(
+    game_stat_t *game) { //проверяем равно ли количество "шагов до проигрыша" 6
+  return game->step_to_death == 6 ? 1 : 0; //если совпадает 1, если нет 0
+}
+
 int return_letter_by_keycode(unsigned int keycode, char *output) {
 
   if (keycode == 0x18) {
@@ -530,8 +536,48 @@ int return_letter_by_keycode_eng(unsigned int keycode, char *output) {
   return 0;
 }
 
+void game_draw(x_window_param_t *win, game_res_t *res,
+               game_stat_t *game) { //эта функция рисует всю игру
+  XClearWindow(win->display, win->window); //очищаем все, что было нарисовано
 
-int game_lose_check(
-    game_stat_t *game) { //проверяем равно ли количество "шагов до проигрыша" 6
-  return game->step_to_death == 6 ? 1 : 0; //если совпадает 1, если нет 0
+  pixmap_attr_t *current_pixmap =
+      &res->step_to_death[game->step_to_death]; //указатель на картинку равен
+                                                //значению счетчика "шагов до
+                                                //проигрыша"
+  XCopyPlane(win->display, current_pixmap->bitmap, win->window,
+             win->gc, //рисуем картинку
+             0, 0, current_pixmap->bitmap_width, current_pixmap->bitmap_height,
+             100, 0, 1);
+  char *word;
+  if (res->language == LANG_RUS) {
+    word = game_return_progress(game);
+  } else {
+    word = game_return_progress_eng(game);
+  }
+
+  if (game_win_check(game)) { //если победили
+    XDrawString(win->display, win->window, win->gc, 50,
+                110, //на координатах 50, 110 пишет фразу "You win!"
+                "You win!", strlen("You win!"));
+    XDrawString(win->display, win->window, win->gc, 100,
+                220, //на координатах 100, 220 пишет слово
+                game->current_word, strlen(game->current_word));
+
+    printf("%s\n", game->current_word);
+  } else if (game_lose_check(game)) { //если проиграли
+    XDrawString(win->display, win->window, win->gc, 40, 110, "You lose!",
+                strlen("You lose!"));
+    XDrawString(win->display, win->window, win->gc, 100, 220,
+                game->current_word, strlen(game->current_word));
+
+    printf("%s\n",
+           game->current_word); // если не то и не то - выводит текущий прогресс
+  } else {
+    XDrawString(win->display, win->window, win->gc, 100, 220, word,
+                strlen(word));
+
+    printf("%s\n", word);
+  }
+
+  XFlush(win->display); //выводит
 }
