@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
+#define ESC_KEYCODE 0x09
 
 static void set_title(char *title_ptr, Display *display,
                       Window window) { //дает имя окна
@@ -173,21 +176,25 @@ int str_vec_load_from_file(string_vec_t *vec, char *filedir,
 }
 
 int load_pixmap(x_window_param_t *window,
-                pixmap_attr_t *pixmap, //структура, хранящая картинку
+                pixmap_attr_t *pixmap, //структура, которая хранит картинку
                 char *filedir, char *filename) {
+
   char *fullpath = merge_str(
-      filedir, filename); //объединяет дерикторию и имя файла в одну строку
+      filedir, filename); //объединяем дерикторию и имя файла в одну строку
+
   int rc = XReadBitmapFile(
-      window->display,
-      window->window, //возвращает результат, прочитана ли картинка
-      fullpath,       //путь
+      window->display, window->window, //возвращает результат на сколько успешно
+                                       //у нас получилось прочитать картинку
+      fullpath,                                      //путь
       &pixmap->bitmap_width, &pixmap->bitmap_height, //параметры
       &pixmap->bitmap, //место куда загрузится картинка
       &pixmap->x, &pixmap->y); //координаты
-  if (rc != BitmapSuccess) {   //обработка ошибок
+
+  if (rc != BitmapSuccess) { //обработка ошибок
     fprintf(stderr, "Read bitmap failed: %s\n", fullpath);
     return 1;
   }
+
   free(fullpath); //освобождение памяти
   return 0;
 }
