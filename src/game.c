@@ -593,14 +593,14 @@ static int graphic_set(x_window_param_t *win) { //настройка
   XFontStruct *fontInfo;
   //шрифт
 
-  if ((fontInfo = XLoadQueryFont(win->display, "*droid*sans*")) == NULL) {
+  /*if ((fontInfo = XLoadQueryFont(win->display, "*droid*sans*")) == NULL) {
     fprintf(stderr, "Font loading failed.\n");
     //если не получилось
     return 1;
   }
 
   XSetFont(win->display, win->gc, fontInfo->fid);
-  //если получилось - устанавливаем этот шрифт
+  //если получилось - устанавливаем этот шрифт*/
 
   XSetBackground(win->display, win->gc, //устанавливаем задний и передний фон
                  WhitePixel(win->display, win->screen_number));
