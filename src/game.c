@@ -610,3 +610,49 @@ int pre_game_settings(x_window_param_t *win) { //предигровые наст
     return 1;
   }
 }
+
+static unsigned int
+event_keycode(x_window_param_t *win) { //получаем код клавиши события
+  return win->event.xkey.keycode;
+}
+
+void game_loop(x_window_param_t *win, game_res_t *res,
+               game_stat_t *game) { //игровой цикл
+
+  XNextEvent(win->display, &win->event); //получаем текущее событие
+  game_draw(win, res, game);             //отрисовка экрана
+
+  while (win->display) {                   //цикл
+    XNextEvent(win->display, &win->event); //получаем событие
+
+    if (win->event.type == KeyPress) { //если это событие равно нажатой клавиши
+
+      if (event_keycode(win) == ESC_KEYCODE) //если эта клавиша esc
+        break;                               //закрываем окно
+
+      if (game->status == GAME_OVER) { //если статус game over
+        game_reset(game);              //обновляем игру
+      } else {
+        if (res->language == LANG_RUS) {
+          char letter[3];
+          letter[2] = '\0';
+          return_letter_by_keycode(event_keycode(win), letter);
+
+          game_letter_push(game, letter);
+        } else {
+          char letter;
+          return_letter_by_keycode_eng(event_keycode(win), &letter);
+
+          game_letter_push_eng(game, letter);
+        }
+      }
+
+      game_draw(win, res, game); //после того как передали разделение в логику
+                                 //игры отрисовываем окно по новой
+
+      if (game_win_check(game))
+        game->status =
+            GAME_OVER; //если игра окончина присваеваем значение game over
+    }
+  }
+}
